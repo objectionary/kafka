@@ -305,6 +305,21 @@ println("Build properties: ignoreFailures=$userIgnoreFailures, maxParallelForks=
 
 subprojects {
 
+  task hone(type: Exec) {
+      dependsOn compileJava
+      pluginManager.withPlugin('java') {
+        commandLine 'mvn',
+          "-Dhone.jeo-version=0.13.7",
+          "-Dhone.target=${project.buildDir}",
+          "-Dhone.classes=${project.buildDir.toPath().relativize(sourceSets.main.output.classesDirs.singleFile.toPath())}",
+          '-Dhone.rules=streams/*',
+          "org.eolang:hone-maven-plugin:0.8.1:pull",
+          "org.eolang:hone-maven-plugin:0.8.1:optimize"
+      }
+  }
+  compileJava.finalizedBy hone
+  classes.dependsOn hone
+
   // enable running :dependencies task recursively on all subprojects
   // eg: ./gradlew allDeps
   task allDeps(type: DependencyReportTask) {}
