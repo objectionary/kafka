@@ -309,12 +309,12 @@ subprojects {
       dependsOn compileJava
       pluginManager.withPlugin('java') {
         commandLine 'mvn',
-          "-Dhone.jeo-version=0.13.7",
+          "-Dhone.jeo-version=0.13.9",
           "-Dhone.target=${project.buildDir}",
           "-Dhone.classes=${project.buildDir.toPath().relativize(sourceSets.main.output.classesDirs.singleFile.toPath())}",
           '-Dhone.rules=streams/*',
-          "org.eolang:hone-maven-plugin:0.8.1:pull",
-          "org.eolang:hone-maven-plugin:0.8.1:optimize"
+          "org.eolang:hone-maven-plugin:0.9.0:pull",
+          "org.eolang:hone-maven-plugin:0.9.0:optimize"
       }
   }
   compileJava.finalizedBy hone
