@@ -41,9 +41,8 @@ plugins {
 
   id "com.github.spotbugs" version '6.0.25' apply false
   id 'org.scoverage' version '8.0.3' apply false
-  // Updating the shadow plugin version to 8.1.1 causes issue with signing and publishing the shadowed
-  // artifacts - see https://github.com/johnrengelman/shadow/issues/901
-  id 'com.github.johnrengelman.shadow' version '8.1.0' apply false
+  // Shadow plugin updated to 8.1.1 for Gradle 8.10.2 compatibility
+  id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
   id 'com.diffplug.spotless' version "6.25.0"
 }
 
@@ -305,20 +304,29 @@ println("Build properties: ignoreFailures=$userIgnoreFailures, maxParallelForks=
 
 subprojects {
 
-  task hone(type: Exec) {
-      dependsOn compileJava
-      pluginManager.withPlugin('java') {
+  pluginManager.withPlugin('java') {
+    def v = '0.11.0'
+    def hone = tasks.register('hone', Exec) {
+      group = 'build'
+      description = 'Run hone after Java compile'
+      sourceSets.main.output.classesDirs.files.each { dir ->
         commandLine 'mvn',
+          "-Dhone.timeout=4",
           "-Dhone.jeo-version=0.13.9",
           "-Dhone.target=${project.buildDir}",
-          "-Dhone.classes=${project.buildDir.toPath().relativize(sourceSets.main.output.classesDirs.singleFile.toPath())}",
+          "-Dhone.classes=${project.buildDir.toPath().relativize(dir.toPath())}",
           '-Dhone.rules=streams/*',
-          "org.eolang:hone-maven-plugin:0.9.0:pull",
-          "org.eolang:hone-maven-plugin:0.9.0:optimize"
+          "org.eolang:hone-maven-plugin:${v}:pull",
+          "org.eolang:hone-maven-plugin:${v}:optimize"
       }
+    }
+    hone.configure {
+      mustRunAfter(tasks.named('compileJava'))
+    }
+    tasks.named('classes') {
+      dependsOn(hone)
+    }
   }
-  compileJava.finalizedBy hone
-  classes.dependsOn hone
 
   // enable running :dependencies task recursively on all subprojects
   // eg: ./gradlew allDeps
@@ -547,7 +555,7 @@ subprojects {
         maxFailures = userMaxTestRetryFailures
       }
     }
-    
+
     // As we process results, check if there were any test failures.
     afterSuite { desc, result ->
       if (result.resultType == TestResult.ResultType.FAILURE) {
