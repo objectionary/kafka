@@ -304,30 +304,30 @@ println("Build properties: ignoreFailures=$userIgnoreFailures, maxParallelForks=
 
 subprojects {
 
-  // pluginManager.withPlugin('java') {
-  //   def v = '0.13.1'
-  //   def hone = tasks.register('hone', Exec) {
-  //     group = 'build'
-  //     description = 'Run hone after Java compile'
-  //     sourceSets.main.output.classesDirs.files.each { dir ->
-  //       commandLine 'mvn',
-  //         "-Dhone.timeout=4",
-  //         "-Dhone.threads=0",
-  //         "-Dhone.grep-in=(66-69-6C-74-65-72|6D-61-70)",
-  //         "-Dhone.target=${project.buildDir}",
-  //         "-Dhone.classes=${project.buildDir.toPath().relativize(dir.toPath())}",
-  //         '-Dhone.rules=streams/*,!streams/101-remove-self-reference-labels',
-  //         "org.eolang:hone-maven-plugin:${v}:pull",
-  //         "org.eolang:hone-maven-plugin:${v}:optimize"
-  //     }
-  //   }
-  //   hone.configure {
-  //     mustRunAfter(tasks.named('compileJava'))
-  //   }
-  //   tasks.named('classes') {
-  //     dependsOn(hone)
-  //   }
-  // }
+  pluginManager.withPlugin('java') {
+    def v = '0.13.1'
+    def hone = tasks.register('hone', Exec) {
+      group = 'build'
+      description = 'Run hone after Java compile'
+      sourceSets.main.output.classesDirs.files.each { dir ->
+        commandLine 'mvn',
+          "-Dhone.timeout=60",
+          "-Dhone.threads=0",
+          "-Dhone.grep-in=(66-69-6C-74-65-72|6D-61-70)",
+          "-Dhone.target=${project.buildDir}",
+          "-Dhone.classes=${project.buildDir.toPath().relativize(dir.toPath())}",
+          '-Dhone.rules=streams/*,!streams/101-remove-self-reference-labels',
+          "org.eolang:hone-maven-plugin:${v}:pull",
+          "org.eolang:hone-maven-plugin:${v}:optimize"
+      }
+    }
+    hone.configure {
+      mustRunAfter(tasks.named('compileJava'))
+    }
+    tasks.named('classes') {
+      dependsOn(hone)
+    }
+  }
 
   // enable running :dependencies task recursively on all subprojects
   // eg: ./gradlew allDeps
