@@ -7,5 +7,5 @@ Our changes are in the `build.gradle` file.
 To test how [hone-maven-plugin](https://github.com/objectionary/hone-maven-plugin) works, run:
 
 ```
-gradle --console=plain --no-parallel test
+./gradlew --console=plain --no-parallel clean test
 ```
