@@ -7,5 +7,7 @@ Our changes are in the `build.gradle` file.
 To test how [hone-maven-plugin](https://github.com/objectionary/hone-maven-plugin) works, run:
 
 ```
-./gradlew --console=plain --no-parallel clean test
+./gradlew clean test
 ```
+
+You need **Java 17** — exactly this version, not less, not more!
