@@ -305,7 +305,7 @@ println("Build properties: ignoreFailures=$userIgnoreFailures, maxParallelForks=
 subprojects {
 
   pluginManager.withPlugin('java') {
-    def v = '0.15.0'
+    def v = '0.15.1'
     def hone = tasks.register('hone', Exec) {
       group = 'build'
       description = 'Run hone after Java compile'
