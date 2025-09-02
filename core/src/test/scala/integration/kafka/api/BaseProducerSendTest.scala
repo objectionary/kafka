@@ -37,7 +37,7 @@ import org.apache.kafka.common.{KafkaException, TopicPartition}
 import org.apache.kafka.coordinator.group.GroupCoordinatorConfig
 import org.apache.kafka.server.config.ServerLogConfigs
 import org.junit.jupiter.api.Assertions._
-import org.junit.jupiter.api.{AfterEach, BeforeEach, TestInfo}
+import org.junit.jupiter.api.{AfterEach, BeforeEach, Disabled, TestInfo}
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 
@@ -494,6 +494,33 @@ abstract class BaseProducerSendTest extends KafkaServerTestHarness {
       }
     } finally {
       producer.close()
+    }
+  }
+
+  /**
+   * Test close with zero timeout from caller thread
+   */
+  @ParameterizedTest(name = TestInfoUtils.TestWithParameterizedQuorumAndGroupProtocolNames)
+  @MethodSource(Array("getTestQuorumAndGroupProtocolParametersAll"))
+  @Disabled
+  def testCloseWithZeroTimeoutFromCallerThread(quorum: String, groupProtocol: String): Unit = {
+    TestUtils.createTopicWithAdmin(admin, topic, brokers, controllerServers, 2, 2)
+    val partition = 0
+    consumer.assign(List(new TopicPartition(topic, partition)).asJava)
+    val record0 = new ProducerRecord[Array[Byte], Array[Byte]](topic, partition, null,
+      "value".getBytes(StandardCharsets.UTF_8))
+
+    // Test closing from caller thread.
+    for (_ <- 0 until 50) {
+      val producer = createProducer(lingerMs = Int.MaxValue, deliveryTimeoutMs = Int.MaxValue)
+      val responses = (0 until numRecords) map (_ => producer.send(record0))
+      assertTrue(responses.forall(!_.isDone), "No request is complete.")
+      producer.close(Duration.ZERO)
+      responses.foreach { future =>
+        val e = assertThrows(classOf[ExecutionException], () => future.get())
+        assertEquals(classOf[KafkaException], e.getCause.getClass)
+      }
+      assertEquals(0, consumer.poll(Duration.ofMillis(50L)).count, "Fetch response should have no message returned.")
     }
   }
 

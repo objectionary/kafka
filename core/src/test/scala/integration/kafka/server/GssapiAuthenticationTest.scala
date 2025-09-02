@@ -38,7 +38,7 @@ import org.apache.kafka.common.security.kerberos.KerberosLogin
 import org.apache.kafka.common.utils.{LogContext, MockTime}
 import org.apache.kafka.network.SocketServerConfigs
 import org.junit.jupiter.api.Assertions._
-import org.junit.jupiter.api.{AfterEach, BeforeEach, TestInfo}
+import org.junit.jupiter.api.{AfterEach, BeforeEach, Disabled, TestInfo}
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.{MethodSource, ValueSource}
 
@@ -174,6 +174,28 @@ class GssapiAuthenticationTest extends IntegrationTestHarness with SaslSetup {
     clientConfig.put(SaslConfigs.SASL_JAAS_CONFIG, invalidServiceConfig)
     clientConfig.put(SaslConfigs.SASL_KERBEROS_SERVICE_NAME, "invalid-service")
     verifyNonRetriableAuthenticationFailure()
+  }
+
+  /**
+   * Test that when client fails to verify authenticity of the server, the resulting failed authentication exception
+   * is thrown immediately, and is not affected by <code>connection.failed.authentication.delay.ms</code>.
+   */
+  @ParameterizedTest(name = TestInfoUtils.TestWithParameterizedQuorumAndGroupProtocolNames)
+  @MethodSource(Array("getTestQuorumAndGroupProtocolParametersAll"))
+  @Disabled
+  def testServerAuthenticationFailure(quorum: String, groupProtocol: String): Unit = {
+    // Setup client with a non-existent service principal, so that server authentication fails on the client
+    val clientLoginContext = jaasClientLoginModule(kafkaClientSaslMechanism, Some("another-kafka-service"))
+    val configOverrides = new Properties()
+    configOverrides.setProperty(SaslConfigs.SASL_JAAS_CONFIG, clientLoginContext)
+    val consumer = createConsumer(configOverrides = configOverrides)
+    consumer.assign(List(tp).asJava)
+
+    val startMs = System.currentTimeMillis()
+    assertThrows(classOf[SaslAuthenticationException], () => consumer.poll(Duration.ofMillis(50)))
+    val endMs = System.currentTimeMillis()
+    require(endMs - startMs < failedAuthenticationDelayMs, "Failed authentication must not be delayed on the client")
+    consumer.close()
   }
 
   /**
