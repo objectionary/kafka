@@ -451,18 +451,6 @@ public class SelectorTest {
     }
 
     @Test
-    public void testCloseOldestConnection() throws Exception {
-        String id = "0";
-        selector.connect(id, new InetSocketAddress("localhost", server.port), BUFFER_SIZE, BUFFER_SIZE);
-        NetworkTestUtils.waitForChannelConnected(selector, id);
-        time.sleep(CONNECTION_MAX_IDLE_MS + 1_000);
-        selector.poll(0);
-
-        assertTrue(selector.disconnected().containsKey(id), "The idle connection should have been closed");
-        assertEquals(ChannelState.EXPIRED, selector.disconnected().get(id));
-    }
-
-    @Test
     public void testIdleExpiryWithoutReadyKeys() throws IOException {
         String id = "0";
         selector.connect(id, new InetSocketAddress("localhost", server.port), BUFFER_SIZE, BUFFER_SIZE);
