@@ -105,21 +105,6 @@ public abstract class TieredStorageTestHarness extends IntegrationTestHarness {
         context = new TieredStorageTestContext(this);
     }
 
-    // NOTE: Not able to refer TestInfoUtils#TestWithParameterizedQuorumName() in the ParameterizedTest name.
-    @ParameterizedTest(name = "{displayName}.quorum={0}.groupProtocol={1}")
-    @MethodSource("getTestQuorumAndGroupProtocolParametersAll")
-    public void executeTieredStorageTest(String quorum, String groupProtocol) {
-        TieredStorageTestBuilder builder = new TieredStorageTestBuilder();
-        writeTestSpecifications(builder);
-        try {
-            for (TieredStorageTestAction action : builder.complete()) {
-                action.execute(context);
-            }
-        } catch (Exception ex) {
-            throw new AssertionError("Could not build test specifications. No test was executed.", ex);
-        }
-    }
-
     @AfterEach
     @Override
     public void tearDown() {
