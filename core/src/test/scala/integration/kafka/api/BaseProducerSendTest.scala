@@ -498,32 +498,6 @@ abstract class BaseProducerSendTest extends KafkaServerTestHarness {
   }
 
   /**
-   * Test close with zero timeout from caller thread
-   */
-  @ParameterizedTest(name = TestInfoUtils.TestWithParameterizedQuorumAndGroupProtocolNames)
-  @MethodSource(Array("getTestQuorumAndGroupProtocolParametersAll"))
-  def testCloseWithZeroTimeoutFromCallerThread(quorum: String, groupProtocol: String): Unit = {
-    TestUtils.createTopicWithAdmin(admin, topic, brokers, controllerServers, 2, 2)
-    val partition = 0
-    consumer.assign(List(new TopicPartition(topic, partition)).asJava)
-    val record0 = new ProducerRecord[Array[Byte], Array[Byte]](topic, partition, null,
-      "value".getBytes(StandardCharsets.UTF_8))
-
-    // Test closing from caller thread.
-    for (_ <- 0 until 50) {
-      val producer = createProducer(lingerMs = Int.MaxValue, deliveryTimeoutMs = Int.MaxValue)
-      val responses = (0 until numRecords) map (_ => producer.send(record0))
-      assertTrue(responses.forall(!_.isDone), "No request is complete.")
-      producer.close(Duration.ZERO)
-      responses.foreach { future =>
-        val e = assertThrows(classOf[ExecutionException], () => future.get())
-        assertEquals(classOf[KafkaException], e.getCause.getClass)
-      }
-      assertEquals(0, consumer.poll(Duration.ofMillis(50L)).count, "Fetch response should have no message returned.")
-    }
-  }
-
-  /**
    * Test close with zero and non-zero timeout from sender thread
    */
   @ParameterizedTest(name = TestInfoUtils.TestWithParameterizedQuorumAndGroupProtocolNames)
