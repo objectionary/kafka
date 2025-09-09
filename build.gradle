@@ -314,7 +314,7 @@ subprojects {
           "-Dhone.timeout=400",
           "-Dhone.threads=0",
           "-Dhone.skip-phino",
-          "-Dhone.jeo-version=0.14.2",
+          "-Dhone.jeo-version=0.14.1",
           "-Dhone.grep-in=(66-69-6C-74-65-72|6D-61-70)",
           "-Dhone.target=${project.buildDir}",
           "-Dhone.classes=${project.buildDir.toPath().relativize(dir.toPath())}",
