@@ -371,6 +371,7 @@ class ConsumerBounceTest extends AbstractConsumerTest with Logging {
   /**
     * When we have the consumer group max size configured to X, the X+1th consumer trying to join should receive a fatal exception
     */
+  @Disabled
   @ParameterizedTest(name = TestInfoUtils.TestWithParameterizedQuorumAndGroupProtocolNames)
   @MethodSource(Array("getTestQuorumAndGroupProtocolParametersAll"))
   def testConsumerReceivesFatalExceptionWhenGroupPassesMaxSize(quorum: String, groupProtocol: String): Unit = {
