@@ -316,6 +316,7 @@ subprojects {
           commandLine 'mvn',
                   "-Dhone.timeout=400",
                   "-Dhone.threads=0",
+                  "-Dhone.skip-phino",
                   "-Dhone.jeo-version=0.14.4",
                   "-Dhone.grep-in=(66-69-6C-74-65-72|6D-61-70)",
                   "-Dhone.rules=none",
