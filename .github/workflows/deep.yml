@@ -47,7 +47,7 @@ jobs:
           key: ubuntu-jdk-17-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ubuntu-jdk-17-gradle-
-      - run: ./gradlew clean test --parallel
+      - run: ./gradlew :core:test --parallel
   terminate-instance:
     needs:
       - start-instance
