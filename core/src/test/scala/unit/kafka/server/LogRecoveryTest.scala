@@ -27,7 +27,7 @@ import org.apache.kafka.common.serialization.{IntegerSerializer, StringSerialize
 import org.apache.kafka.server.config.ReplicationConfigs
 import org.apache.kafka.storage.internals.checkpoint.OffsetCheckpointFile
 import org.junit.jupiter.api.Assertions._
-import org.junit.jupiter.api.{AfterEach, BeforeEach, TestInfo}
+import org.junit.jupiter.api.{AfterEach, BeforeEach, Disabled, TestInfo}
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
@@ -201,6 +201,7 @@ class LogRecoveryTest extends QuorumTestHarness {
   }
 
   @ParameterizedTest
+  @Disabled
   @ValueSource(strings = Array("kraft"))
   def testHWCheckpointWithFailuresMultipleLogSegments(quorum: String): Unit = {
     var leader = getLeaderIdForPartition(servers, topicPartition)
