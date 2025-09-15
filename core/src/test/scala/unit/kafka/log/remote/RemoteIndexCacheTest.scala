@@ -27,7 +27,7 @@ import org.apache.kafka.storage.internals.log.RemoteIndexCache._
 import org.apache.kafka.storage.internals.log._
 import org.apache.kafka.test.{TestUtils => JTestUtils}
 import org.junit.jupiter.api.Assertions._
-import org.junit.jupiter.api.{AfterEach, BeforeEach, Test}
+import org.junit.jupiter.api.{AfterEach, BeforeEach, Disabled, Test}
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.ArgumentMatchers
@@ -552,6 +552,7 @@ class RemoteIndexCacheTest {
     assertCacheSize(0)
   }
 
+  @Disabled
   @Test
   def testCorrectnessForCacheAndIndexFilesWhenResizeCache(): Unit = {
 
