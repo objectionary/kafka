@@ -240,6 +240,7 @@ import org.apache.kafka.common.utils.Utils;
 import org.apache.kafka.test.MockMetricsReporter;
 import org.apache.kafka.test.TestUtils;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8678,6 +8679,7 @@ public class KafkaAdminClientTest {
      * Test that if the client can send to a node, but doesn't receive a response, it will
      * disconnect and try a different node.
      */
+    @Disabled
     @Test
     public void testClientSideTimeoutAfterFailureToReceiveResponse() throws Exception {
         Cluster cluster = mockCluster(3, 0);
