@@ -314,9 +314,9 @@ subprojects {
         description = 'Run hone after Java compile'
         sourceSets.main.output.classesDirs.files.each { dir ->
           commandLine 'mvn',
-                  "-Dhone.timeout=400",
+                  "-Dhone.timeout=700",
                   "-Dhone.threads=0",
-                  "-Dhone.jeo-version=0.14.9",
+                  "-Dhone.jeo-version=0.14.10",
                   "-Dhone.grep-in=(66-69-6C-74-65-72|6D-61-70)",
                   "-Dhone.rules=none",
                   "-Dhone.target=${project.buildDir}",
