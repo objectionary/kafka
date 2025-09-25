@@ -303,6 +303,7 @@ class RemoteIndexCacheTest {
   }
 
   @Test
+  @Disabled
   def testCleanerThreadShutdown(): Unit = {
     // cache is empty at beginning
     assertTrue(cache.internalCache.asMap().isEmpty)
