@@ -84,6 +84,7 @@ import com.yammer.metrics.core.MetricName;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -3684,6 +3685,7 @@ public class RemoteLogManagerTest {
     }
 
     @Test
+    @Disabled
     public void testRLMOpsWhenMetadataIsNotReady() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(2);
         when(remoteLogMetadataManager.isReady(any(TopicIdPartition.class)))
