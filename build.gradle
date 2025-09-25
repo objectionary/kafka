@@ -315,7 +315,7 @@ subprojects {
         sourceSets.main.output.classesDirs.files.each { dir ->
           commandLine 'mvn',
                   "-Dhone.timeout=700",
-                  "-Dhone.threads=2",
+                  "-Dhone.threads=0",
                   "-Dhone.jeo-version=0.14.11",
                   "-Dhone.grep-in=(66-69-6C-74-65-72|6D-61-70)",
                   "-Dhone.rules=streams/*",
