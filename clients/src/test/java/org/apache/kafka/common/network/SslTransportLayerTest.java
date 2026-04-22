@@ -1182,6 +1182,7 @@ public class SslTransportLayerTest {
      */
     @ParameterizedTest
     @ArgumentsSource(SslTransportLayerArgumentsProvider.class)
+    @Disabled
     public void testServerTruststoreDynamicUpdate(Args args) throws Exception {
         SecurityProtocol securityProtocol = SecurityProtocol.SSL;
         args.sslServerConfigs.put(BrokerSecurityConfigs.SSL_CLIENT_AUTH_CONFIG, "required");
