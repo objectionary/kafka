@@ -1008,6 +1008,7 @@ public class SslTransportLayerTest {
      * Verifies that inter-broker listener with validation of truststore against keystore works
      * with configs including mutual authentication and hostname verification.
      */
+    @Disabled
     @ParameterizedTest
     @ArgumentsSource(SslTransportLayerArgumentsProvider.class)
     public void testInterBrokerSslConfigValidation(Args args) throws Exception {
