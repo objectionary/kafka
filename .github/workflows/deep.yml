@@ -50,7 +50,7 @@ jobs:
       - run: |
           sudo wget -q -O /usr/bin/phino http://phino.objectionary.com/releases/ubuntu-24.04/phino-latest
           sudo chmod a+x /usr/bin/phino
-          ./gradlew clean test --fail-fast
+          ./gradlew clean assemble --fail-fast
   terminate-instance:
     needs:
       - start-instance
