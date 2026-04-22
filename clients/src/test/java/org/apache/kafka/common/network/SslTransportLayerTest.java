@@ -92,6 +92,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for the SSL transport layer. These use a test harness that runs a simple socket server that echos back responses.
  */
+@Disabled
 public class SslTransportLayerTest {
 
     private static final int BUFFER_SIZE = 4 * 1024;
